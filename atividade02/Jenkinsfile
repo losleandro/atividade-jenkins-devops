@@ -4,38 +4,26 @@ pipeline {
     stages {
         stage('Cleanup') {
             steps {
-                echo 'Limpando workspace...'
-                deleteDir()
+                sh 'docker-compose down -v || true'
             }
         }
 
         stage('Checkout') {
             steps {
-                echo 'Fazendo checkout do repositório...'
-                git branch: 'main',
-                    url: 'https://github.com/losleandro/atividade-jenkins-devops.git',
-                    credentialsId: 'GitHubToken' // Substitua pelo ID da credencial criada no Jenkins
+                git branch: 'main', url: 'https://github.com/SEU_USUARIO/atividade02.git'
             }
         }
 
         stage('Construção') {
             steps {
-                echo 'Construindo a aplicação...'
-                sh 'python3 atividade.py'  // Substitua pelo comando adequado para sua aplicação
+                sh 'docker-compose build'
             }
         }
 
         stage('Entrega') {
             steps {
-                echo 'Realizando entrega da aplicação...'
-                sh 'cp -r * /caminho/para/entrega/' // Ajuste conforme necessário
+                sh 'docker-compose up -d'
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline finalizada.'
         }
     }
 }
