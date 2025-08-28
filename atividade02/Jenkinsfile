@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Cleanup') {
             steps {
-                sh 'docker compose down -v || true'
+                bat 'docker compose down -v || exit 0'
             }
         }
 
@@ -16,13 +16,13 @@ pipeline {
 
         stage('Construção') {
             steps {
-                sh 'docker compose build'
+                bat 'docker compose build'
             }
         }
 
         stage('Entrega') {
             steps {
-                sh 'docker compose up -d'
+                bat 'docker compose up -d'
             }
         }
     }
