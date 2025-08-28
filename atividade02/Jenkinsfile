@@ -10,7 +10,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/SEU_USUARIO/atividade02.git'
+                git branch: 'main', url: 'https://github.com/losleandro/atividade-jenkins-devops.git'
             }
         }
 
@@ -27,3 +27,4 @@ pipeline {
         }
     }
 }
+
