@@ -2,34 +2,41 @@ pipeline {
     agent any
 
     stages {
-        stage('Cleanup') {
-            steps {
-                echo 'Limpando workspace...'
-                deleteDir()  // limpa arquivos antigos
-            }
-        }
-
         stage('Checkout') {
             steps {
-                echo 'Clonando repositório...'
-                git url: 'https://github.com/losleandro/atividade-jenkins-devops.git'
+                git branch: 'main',
+                    url: 'https://github.com/losleandro/atividade-jenkins-devops.git'
             }
         }
 
-        stage('Construção') {
+        stage('Cleanup') {
             steps {
-                echo 'Instalando dependências e construindo app...'
-                sh 'python -m venv venv'
-                sh 'venv/bin/pip install --upgrade pip'
-                sh 'venv/bin/pip install -r requirements.txt'
+                dir('atividade02') {
+                    sh 'docker-compose down -v || true'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('atividade02') {
+                    sh 'docker-compose build'
+                }
             }
         }
 
         stage('Entrega') {
             steps {
-                echo 'Rodando aplicação...'
-                sh 'venv/bin/python main.py &'
+                dir('atividade02') {
+                    sh 'docker-compose up -d'
+                }
             }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline finalizada"
         }
     }
 }
