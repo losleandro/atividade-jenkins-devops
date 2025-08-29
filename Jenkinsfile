@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // Faz o clone direto no workspace
                 git branch: 'main',
                     url: 'https://github.com/losleandro/atividade-jenkins-devops.git'
             }
@@ -11,25 +12,22 @@ pipeline {
 
         stage('Cleanup') {
             steps {
-                dir('atividade02') {
-                    sh 'docker-compose down -v || true'
-                }
+                // Para qualquer container anterior e remove volumes
+                sh 'docker-compose down -v || true'
             }
         }
 
         stage('Build') {
             steps {
-                dir('atividade02') {
-                    sh 'docker-compose build'
-                }
+                // Constrói as imagens definidas no docker-compose.yml
+                sh 'docker-compose build'
             }
         }
 
         stage('Entrega') {
             steps {
-                dir('atividade02') {
-                    sh 'docker-compose up -d'
-                }
+                // Sobe os containers em background
+                sh 'docker-compose up -d'
             }
         }
     }
