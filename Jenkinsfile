@@ -19,15 +19,18 @@ pipeline {
         stage('Construção') {
             steps {
                 echo 'Construindo a imagem Docker...'
-                // Usando shell em vez da API Docker do Jenkins
-                sh 'docker build -t ./atividade02'
+                script {
+                    docker.build('atividade02', './atividade02')
+                }
             }
         }
 
         stage('Entrega') {
             steps {
-                echo 'Executando container...'
-                sh 'docker run --rm atividade02'
+                echo 'Executando o container...'
+                script {
+                    docker.image('atividade02').run()
+                }
             }
         }
     }
