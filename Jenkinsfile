@@ -17,21 +17,21 @@ pipeline {
         stage('Cleanup') {
             steps {
                 echo 'Parando e removendo containers antigos...'
-                bat 'docker-compose down -v'
+                sh 'docker-compose down -v'
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Buildando containers...'
-                bat 'docker-compose build --no-cache'
+                sh 'docker-compose build --no-cache'
             }
         }
 
         stage('Up') {
             steps {
                 echo 'Subindo containers...'
-                bat 'docker-compose up -d'
+                sh 'docker-compose up -d'
             }
         }
     }
