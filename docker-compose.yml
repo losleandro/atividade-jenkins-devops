@@ -25,7 +25,7 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - C:/Users/Loss/Documents/PosGraduacao/DevOps/atividade02/db:/docker-entrypoint-initdb.d
+      - /home/los/atividade-jenkins-devops/db:/docker-entrypoint-initdb.d
     networks:
       - atividade02_network
 
