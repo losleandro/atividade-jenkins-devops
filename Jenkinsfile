@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_PROJECT_NAME = 'atividade02'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -20,28 +16,22 @@ pipeline {
 
         stage('Cleanup') {
             steps {
-                dir('atividade02') {
-                    echo 'Parando e removendo containers antigos...'
-                    bat 'docker-compose down -v'
-                }
+                echo 'Parando e removendo containers antigos...'
+                bat 'docker-compose down -v'
             }
         }
 
         stage('Build') {
             steps {
-                dir('atividade02') {
-                    echo 'Buildando containers...'
-                    bat 'docker-compose build --no-cache'
-                }
+                echo 'Buildando containers...'
+                bat 'docker-compose build --no-cache'
             }
         }
 
         stage('Up') {
             steps {
-                dir('atividade02') {
-                    echo 'Subindo containers...'
-                    bat 'docker-compose up -d'
-                }
+                echo 'Subindo containers...'
+                bat 'docker-compose up -d'
             }
         }
     }
