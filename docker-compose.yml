@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: atividade02-jenkins
+    restart: always
+    ports:
+      - "8080:8080"  # Porta tradicional do Jenkins
+      - "50000:50000" # Para agentes Jenkins
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock # Permite usar Docker dentro do Jenkins
+    networks:
+      - atividade02_network
+
+  db:
+    image: mysql:8.0
+    container_name: atividade02-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: atividade
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - C:/Users/Loss/Documents/PosGraduacao/DevOps/atividade02/db:/docker-entrypoint-initdb.d
+    networks:
+      - atividade02_network
+
+volumes:
+  jenkins_home:
+  db_data:
+
+networks:
+  atividade02_network:
+    driver: bridge
