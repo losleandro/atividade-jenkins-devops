@@ -4,12 +4,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: 'main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/losleandro/atividade-jenkins-devops.git'
-                    ]]
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: 'main']], 
+                    userRemoteConfigs: [[url: 'https://github.com/losleandro/atividade-jenkins-devops.git']]
                 ])
             }
         }
@@ -17,28 +14,34 @@ pipeline {
         stage('Cleanup') {
             steps {
                 echo 'Parando e removendo containers antigos...'
-                sh 'docker-compose down -v'
+                dir('atividade02') {
+                    sh 'docker-compose down -v'
+                }
             }
         }
 
-        stage('Build') {
+        stage('Construção') {
             steps {
-                echo 'Buildando containers...'
-                sh 'docker-compose build --no-cache'
+                echo 'Construindo containers...'
+                dir('atividade02') {
+                    sh 'docker-compose build --no-cache'
+                }
             }
         }
 
-        stage('Up') {
+        stage('Entrega') {
             steps {
                 echo 'Subindo containers...'
-                sh 'docker-compose up -d'
+                dir('atividade02') {
+                    sh 'docker-compose up -d'
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline finalizada com sucesso!'
+            echo 'Pipeline finalizado com sucesso!'
         }
         failure {
             echo 'Pipeline falhou. Verifique os logs.'
