@@ -1,9 +1,14 @@
 pipeline {
     agent any
 
+    environment {
+        APP_DIR = "atividade02"
+    }
+
     stages {
         stage('Checkout') {
             steps {
+                echo "Fazendo checkout do repositório..."
                 checkout([$class: 'GitSCM',
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[url: 'https://github.com/losleandro/atividade-jenkins-devops.git']]
@@ -13,17 +18,17 @@ pipeline {
 
         stage('Cleanup') {
             steps {
-                echo 'Parando e removendo containers antigos...'
-                dir('atividade02/atividade02') {
-                    sh 'docker-compose down -v || echo "Nada para remover"'
+                echo "Limpando containers e imagens antigas..."
+                dir("${APP_DIR}") {
+                    sh 'docker-compose down --rmi all -v || true'
                 }
             }
         }
 
         stage('Construção') {
             steps {
-                echo 'Construindo containers...'
-                dir('atividade02/atividade02') {
+                echo "Construindo containers..."
+                dir("${APP_DIR}") {
                     sh 'docker-compose build --no-cache'
                 }
             }
@@ -31,8 +36,8 @@ pipeline {
 
         stage('Entrega') {
             steps {
-                echo 'Iniciando containers...'
-                dir('atividade02/atividade02') {
+                echo "Subindo containers..."
+                dir("${APP_DIR}") {
                     sh 'docker-compose up -d'
                 }
             }
@@ -40,11 +45,7 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'Pipeline concluído com sucesso!'
-        }
-        failure {
-            echo 'Pipeline falhou. Verifique os logs.'
-        }
+        success { echo 'Pipeline finalizada com sucesso!' }
+        failure { echo 'Pipeline falhou!' }
     }
 }
