@@ -2,43 +2,36 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: 'main']], 
-                    userRemoteConfigs: [[url: 'https://github.com/losleandro/atividade-jenkins-devops.git']]]) 
-            }
-        }
-
         stage('Cleanup') {
             steps {
-                dir('atividade02') {
-                    // Para garantir que containers antigos sejam removidos sem falha
-                    sh 'docker-compose down -v || true'
-                }
+                echo 'Limpando workspace...'
+                deleteDir()
             }
         }
 
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                dir('atividade02') {
-                    sh 'docker-compose build --no-cache'
+                echo 'Fazendo checkout do código...'
+                git branch: 'main', url: 'https://github.com/losleandro/atividade-jenkins-devops.git'
+            }
+        }
+
+        stage('Construção') {
+            steps {
+                echo 'Construindo a imagem Docker...'
+                script {
+                    docker.build('atividade02', './atividade02')
                 }
             }
         }
 
         stage('Entrega') {
             steps {
-                dir('atividade02') {
-                    sh 'docker-compose up -d'
+                echo 'Executando o container...'
+                script {
+                    docker.image('atividade02').run()
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            echo "Pipeline finalizada"
         }
     }
 }
