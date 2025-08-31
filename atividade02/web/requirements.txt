@@ -1,3 +1,0 @@
-flask
-PyMySQL[rsa]
-flask-sqlalchemy
