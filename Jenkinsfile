@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Construindo a imagem Docker...'
                 // Usando shell em vez da API Docker do Jenkins
-                sh 'docker build -t atividade02 ./atividade02'
+                sh 'docker build -t ./atividade02'
             }
         }
 
