@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        APP_DIR = "atividade02"
+        APP_DIR = "."   // trabalhar na raiz do repositório
     }
 
     stages {
