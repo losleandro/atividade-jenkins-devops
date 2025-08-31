@@ -6,14 +6,14 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', 
                     branches: [[name: 'main']], 
-                    userRemoteConfigs: [[url: 'https://github.com/losleandro/atividade-jenkins-devops.git']]
-                ])
+                    userRemoteConfigs: [[url: 'https://github.com/losleandro/atividade-jenkins-devops.git']]]) 
             }
         }
 
         stage('Cleanup') {
             steps {
                 dir('atividade02') {
+                    // Para garantir que containers antigos sejam removidos sem falha
                     sh 'docker-compose down -v || true'
                 }
             }
@@ -22,7 +22,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('atividade02') {
-                    sh 'docker-compose build'
+                    sh 'docker-compose build --no-cache'
                 }
             }
         }
