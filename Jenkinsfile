@@ -19,18 +19,16 @@ pipeline {
         stage('Construção') {
             steps {
                 echo 'Construindo a imagem Docker...'
-                script {
-                    docker.build('atividade02', './atividade02')
-                }
+                // Usando shell para construir a imagem
+                sh 'docker build -t atividade02 ./atividade02'
             }
         }
 
         stage('Entrega') {
             steps {
                 echo 'Executando o container...'
-                script {
-                    docker.image('atividade02').run()
-                }
+                // Usando shell para rodar o container
+                sh 'docker run --rm atividade02'
             }
         }
     }
