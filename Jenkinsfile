@@ -4,9 +4,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: 'main']], 
-                    userRemoteConfigs: [[url: 'https://github.com/losleandro/atividade-jenkins-devops.git']]
+                // Faz checkout direto na pasta "atividade02" para evitar confusão de diretórios
+                checkout([$class: 'GitSCM',
+                    branches: [[name: 'main']],
+                    userRemoteConfigs: [[url: 'https://github.com/losleandro/atividade-jenkins-devops.git']],
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'atividade02']]
                 ])
             }
         }
@@ -15,7 +17,7 @@ pipeline {
             steps {
                 echo 'Parando e removendo containers antigos...'
                 dir('atividade02') {
-                    sh 'docker-compose down -v'
+                    sh 'docker-compose down -v || echo "Nada para remover"'
                 }
             }
         }
