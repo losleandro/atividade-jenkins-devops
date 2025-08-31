@@ -1,20 +1,28 @@
 pipeline {
     agent any
 
+    environment {
+        COMPOSE_PROJECT_NAME = 'atividade02'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: 'main']], 
-                    userRemoteConfigs: [[url: 'https://github.com/losleandro/atividade-jenkins-devops.git']]]) 
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: 'main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/losleandro/atividade-jenkins-devops.git'
+                    ]]
+                ])
             }
         }
 
         stage('Cleanup') {
             steps {
                 dir('atividade02') {
-                    // Para garantir que containers antigos sejam removidos sem falha
-                    sh 'docker-compose down -v || true'
+                    echo 'Parando e removendo containers antigos...'
+                    bat 'docker-compose down -v'
                 }
             }
         }
@@ -22,23 +30,28 @@ pipeline {
         stage('Build') {
             steps {
                 dir('atividade02') {
-                    sh 'docker-compose build --no-cache'
+                    echo 'Buildando containers...'
+                    bat 'docker-compose build --no-cache'
                 }
             }
         }
 
-        stage('Entrega') {
+        stage('Up') {
             steps {
                 dir('atividade02') {
-                    sh 'docker-compose up -d'
+                    echo 'Subindo containers...'
+                    bat 'docker-compose up -d'
                 }
             }
         }
     }
 
     post {
-        always {
-            echo "Pipeline finalizada"
+        success {
+            echo 'Pipeline finalizada com sucesso!'
+        }
+        failure {
+            echo 'Pipeline falhou. Verifique os logs.'
         }
     }
 }
