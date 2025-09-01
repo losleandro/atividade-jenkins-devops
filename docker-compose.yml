@@ -7,7 +7,7 @@ services:
     restart: always
     ports:
       - "8081:8080"  # Porta tradicional do Jenkins
-      - "50000:50000" # Para agentes Jenkins
+      - "50001:50000" # Para agentes Jenkins
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock # Permite usar Docker dentro do Jenkins
@@ -36,4 +36,5 @@ volumes:
 networks:
   atividade02_network:
     driver: bridge
+
 
