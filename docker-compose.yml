@@ -6,7 +6,7 @@ services:
     container_name: atividade02-jenkins
     restart: always
     ports:
-      - "8080:8080"  # Porta tradicional do Jenkins
+      - "8081:8080"  # Porta tradicional do Jenkins
       - "50000:50000" # Para agentes Jenkins
     volumes:
       - jenkins_home:/var/jenkins_home
@@ -36,3 +36,4 @@ volumes:
 networks:
   atividade02_network:
     driver: bridge
+
